@@ -1,11 +1,16 @@
 {
     "name": "aoni/restcomm",
-    "description": "Restcomm skd",
+    "description": "Restcomm is a turn-key telephony SaaS solution ready for public or private cloud deployment. ",
+    "keywords": ["api", "real-time", "realtime", "Twilio", "telephony", "Restcomm"],
+    "homepage": "http://www.ombrite.com/",
+    "license": "MIT",
     "authors": [
         {
             "name": "aoni abdelhai",
             "email": "aoni@maalitech.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=5.3.0"
+    }
 }
