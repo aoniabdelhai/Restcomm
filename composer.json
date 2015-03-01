@@ -1,0 +1,11 @@
+{
+    "name": "aoni/restcomm",
+    "description": "Restcomm skd",
+    "authors": [
+        {
+            "name": "aoni abdelhai",
+            "email": "aoni@maalitech.com"
+        }
+    ],
+    "require": {}
+}
