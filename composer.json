@@ -2,7 +2,7 @@
     "name": "restcomm/restcomm",
     "description": "TelScale RestComm is a next generation Cloud Communications Platform. It allows web developers to rapidly build voice, video, WebRTC, USSD, SMS, fax and rich messaging applications. Restcomm opens new revenue streams for service providers by exposing existing SS7 and IMS core network assets to application developers",
     "keywords": ["api", "RCML", "telephony", "Restcomm"],
-    "homepage": "http://www.fone.do/",
+    "homepage": "http://il.linkedin.com/in/aoniabdelhai",
     "license": "MIT",
     "authors": [
         {
@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Restcomm\\": "composer/lib/Restcomm"
+            "Restcomm\\": "composer/lib/"
         }
     }
 }

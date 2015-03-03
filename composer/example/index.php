@@ -1,8 +1,8 @@
 <?php
-require_once "../autoloader.php";
+require_once __DIR__ . '/../lib/autoloader.php';
 
 
-$response = new Response;
+$response = new Restcomm\Response;
 /*
  * ADD SAY
  *

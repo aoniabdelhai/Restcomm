@@ -1,4 +1,4 @@
-<?php namespace Restcomm;
+<?php
 /**
  * Created by aoni abdelhai.
  * User: aoni
@@ -6,7 +6,8 @@
  * Time: 14:55
  */
 require_once __DIR__ . '/../lib/autoloader.php';
-$response = new Response();
+;
+$response = new Restcomm\Response();
 $response->addSay('hi how are you');
 
 header("Content-Type: text/xml");
