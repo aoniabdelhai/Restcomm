@@ -1,5 +1,5 @@
 <?php
-
+namespace Restcomm;
 class Client extends Element
 {
     protected $nestables = array();

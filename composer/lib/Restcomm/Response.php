@@ -1,5 +1,5 @@
 <?php
-
+namespace Restcomm;
 class Response extends Element
 {
     protected $nestables = array('Say', 'Play', 'Gather', 'Record',

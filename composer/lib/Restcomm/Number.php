@@ -1,5 +1,4 @@
-<?php
-
+<?php namespace Restcomm;
 class Number extends Element
 {
     protected $nestables = array();

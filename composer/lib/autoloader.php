@@ -1,7 +1,6 @@
 <?php
-#namespace Restcomm\lib;
-define('RESTCOMM_LIB_BASE_DIR', __DIR__.'/lib');
 
+define('RESTCOMM_LIB_BASE_DIR', __DIR__);
 
 function restcommAutoloader($className)
 {

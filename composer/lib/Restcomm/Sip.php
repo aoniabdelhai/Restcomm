@@ -1,5 +1,4 @@
-<?php
-
+<?php namespace Restcomm;
 
 class Sip extends Element
 {

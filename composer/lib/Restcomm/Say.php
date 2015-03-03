@@ -1,4 +1,4 @@
-<?php
+<?php namespace Restcomm;
 
 class Say extends Element
 {

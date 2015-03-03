@@ -1,4 +1,6 @@
 <?php
+namespace Restcomm;
+use \SimpleXMLElement;
 class Element
 {
     protected $nestables = array();
@@ -23,7 +25,7 @@ class Element
         $this->body = $body;
         foreach ($this->attributes as $key => $value) {
             if (!in_array($key, $this->valid_attributes)) {
-                throw new Exception("invalid attribute " . $key . " for " . $this->name);
+                throw new RestcommException("invalid attribute " . $key . " for " . $this->name);
             }
             $this->attributes[$key] = $this->convert_value($value);
         }
@@ -56,8 +58,9 @@ class Element
 
     protected function add($element)
     {
+
         if (!in_array($element->getName(), $this->nestables)) {
-            throw new Exception($element->getName() . " not nestable in " . $this->getName());
+            throw new \Restcomm\RestcommException($element->getName() . " not nestable in " . $this->getName());
         }
         $this->childs[] = $element;
         return $element;
@@ -65,7 +68,8 @@ class Element
 
     public function getName()
     {
-        return $this->name;
+        $name=explode('\\',$this->name);
+        return $name[1];
     }
 
     function addPlay($body = NULL, $attributes = array())

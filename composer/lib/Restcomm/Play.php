@@ -1,5 +1,4 @@
-<?php
-
+<?php namespace Restcomm;
 
 class Play extends Element
 {
@@ -12,7 +11,7 @@ class Play extends Element
         parent::__construct($body, $attributes);
         if (!$body)
         {
-            throw new Exception("No Play File set for " . $this->getName());
+            throw new RestcommException("No Play File set for " . $this->getName());
         }
     }
 }

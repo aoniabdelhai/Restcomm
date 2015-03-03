@@ -1,5 +1,5 @@
 <?php
-
+namespace Restcomm;
 
 class Dial extends Element
 {

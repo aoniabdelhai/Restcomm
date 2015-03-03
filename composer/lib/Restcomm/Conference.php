@@ -1,5 +1,5 @@
 <?php
-
+namespace Restcomm;
 class Conference extends Element
 {
     protected $nestables = array();
