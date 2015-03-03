@@ -87,6 +87,11 @@ class Element
         return $this->add(new Number($body, $attributes));
     }
 
+    function addClient($body = NULL, $attributes = array())
+    {
+        return $this->add(new Client($body, $attributes));
+    }
+
     function addUser($body = NULL, $attributes = array())
     {
         return $this->add(new User($body, $attributes));

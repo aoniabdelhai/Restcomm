@@ -15,6 +15,8 @@ $dial=$response->addDial();
  */
 $dial->addNumber('972546784577');
 
+$dial->addClient('972546784577');
+
 
 /*
  * Add Play
