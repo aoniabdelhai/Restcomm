@@ -2,7 +2,7 @@
     "name": "restcomm/restcomm",
     "description": "TelScale RestComm is a next generation Cloud Communications Platform. It allows web developers to rapidly build voice, video, WebRTC, USSD, SMS, fax and rich messaging applications. Restcomm opens new revenue streams for service providers by exposing existing SS7 and IMS core network assets to application developers",
     "keywords": ["api", "RCML", "telephony", "Restcomm"],
-    "homepage": "http://il.linkedin.com/in/aoniabdelhai",
+    "homepage": "https://github.com/aoniabdelhai/Restcomm",
     "license": "MIT",
     "authors": [
         {
