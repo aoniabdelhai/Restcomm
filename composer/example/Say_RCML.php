@@ -8,7 +8,7 @@
 require_once __DIR__ . '/../lib/autoloader.php';
 ;
 $response = new Restcomm\Response();
-$response->addSay('hi how are you');
+$response->Say('hi how are you');
 
 header("Content-Type: text/xml");
 echo($response->toXML());

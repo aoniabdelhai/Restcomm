@@ -1,6 +1,7 @@
 <?php
 namespace Restcomm;
 use \SimpleXMLElement;
+
 class Element
 {
     protected $nestables = array();
@@ -18,43 +19,39 @@ class Element
     function __construct($body = '', $attributes = array())
     {
         $this->attributes = $attributes;
-        if ((!$attributes) || ($attributes === null)) {
+        if ((!$attributes) || ($attributes === null))
+        {
             $this->attributes = array();
         }
         $this->name = get_class($this);
         $this->body = $body;
-        foreach ($this->attributes as $key => $value) {
+
+        foreach ($this->attributes as $key => $value)
+        {
             if (!in_array($key, $this->valid_attributes)) {
                 throw new RestcommException("invalid attribute " . $key . " for " . $this->name);
             }
-            $this->attributes[$key] = $this->convert_value($value);
+
+            if(is_bool($value))
+                $value = ($value === true) ? 'true' : 'false';
+
+            $this->attributes[$key] =($value === null) ? 'null' : $value;
         }
     }
 
-    protected function convert_value($v)
+    function __call($verb,array $arguments)
     {
-        if ($v === TRUE) {
-            return "true";
-        }
-        if ($v === FALSE) {
-            return "false";
-        }
-        if ($v === NULL) {
-            return "none";
-        }
-        if ($v === "get") {
-            return "GET";
-        }
-        if ($v === "post") {
-            return "POST";
-        }
-        return $v;
+
+        list($body, $attributes) = $arguments + array('', array());
+
+        $verb=__NAMESPACE__.'\\'.ucfirst($verb);
+
+        if(!class_exists($verb))
+            throw new RestcommException("Invalid RCML Verb " . $verb);
+
+        return $this->add(new $verb($body, $attributes));
     }
 
-    function addSay($body = NULL, $attributes = array())
-    {
-        return $this->add(new Say($body, $attributes));
-    }
 
     protected function add($element)
     {
@@ -68,97 +65,39 @@ class Element
 
     public function getName()
     {
-        $name=explode('\\',$this->name);
-        return $name[1];
+
+        list($namespace,$name)=explode('\\',$this->name);
+        return $name;
     }
 
-    function addPlay($body = NULL, $attributes = array())
-    {
-        return $this->add(new Play($body, $attributes));
-    }
 
-    function addDial($body = NULL, $attributes = array())
-    {
-        return $this->add(new Dial($body, $attributes));
-    }
-
-    function addNumber($body = NULL, $attributes = array())
-    {
-        return $this->add(new Number($body, $attributes));
-    }
-
-    function addClient($body = NULL, $attributes = array())
-    {
-        return $this->add(new Client($body, $attributes));
-    }
-
-    function addUser($body = NULL, $attributes = array())
-    {
-        return $this->add(new User($body, $attributes));
-    }
-
-    function addGetDigits($attributes = array())
-    {
-        return $this->add(new GetDigits($attributes));
-    }
-
-    function addRecord($attributes = array())
-    {
-        return $this->add(new Record($attributes));
-    }
-
-    function addHangup($attributes = array())
-    {
-        return $this->add(new Hangup($attributes));
-    }
-
-    function addRedirect($body = NULL, $attributes = array())
-    {
-        return $this->add(new Redirect($body, $attributes));
-    }
-
-    function addWait($attributes = array())
-    {
-        return $this->add(new Wait($attributes));
-    }
-
-    function addConference($body = NULL, $attributes = array())
-    {
-        return $this->add(new Conference($body, $attributes));
-    }
-
-    function addPreAnswer($attributes = array())
-    {
-        return $this->add(new PreAnswer($attributes));
-    }
-
-    function addMessage($body = NULL, $attributes = array())
-    {
-        return $this->add(new Message($body, $attributes));
-    }
-
-    function addDTMF($body = NULL, $attributes = array())
-    {
-        return $this->add(new DTMF($body, $attributes));
-    }
 
     public function asChild($xml)
     {
-        if ($this->body) {
-            $child_xml = $xml->addChild($this->getName(), htmlspecialchars($this->body));
-        } else {
-            $child_xml = $xml->addChild($this->getName());
+        if ($this->body)
+        {
+            $decoded = html_entity_decode($this->body, ENT_COMPAT, 'UTF-8');
+            $normalized = htmlspecialchars($decoded, ENT_COMPAT, 'UTF-8', false);
+            $child_xml = $xml->addChild(ucfirst($this->getName()),$normalized);
+        } else
+        {
+            $child_xml = $xml->addChild(ucfirst($this->getName()));
         }
         $this->setAttributes($child_xml);
-        foreach ($this->childs as $child) {
+        foreach ($this->childs as $child)
+        {
             $child->asChild($child_xml);
         }
     }
 
     public function setAttributes($xml)
     {
-        foreach ($this->attributes as $key => $value) {
-            $xml->addAttribute($key, $value);
+        foreach ($this->attributes as $name => $value) {
+            if (is_bool($value))
+            {
+                $value = ($value === true) ? 'true' : 'false';
+            }
+            $xml->addAttribute($name, $value);
         }
     }
 
@@ -176,7 +115,7 @@ class Element
         if ($this->body) {
             $xmlstr .= "<" . $this->getName() . ">" . htmlspecialchars($this->body) . "</" . $this->getName() . ">";
         } else {
-            $xmlstr .= "<" . $this->getName() . "></" . $this->getName() . ">";
+            $xmlstr .= "<" . $this->getName() . "/>";
         }
         if ($header === TRUE) {
             $xmlstr = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" . $xmlstr;

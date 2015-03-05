@@ -1,5 +1,19 @@
 <?php namespace Restcomm;
-
+/**
+ * Class Play
+ *
+ * @package Restcomm
+ *
+ * The <Play> verb is used to play an audio file to the remote party.
+ *
+ * @loop :The 'loop' attribute (loop >1 Default:1 ) specifies how many times you'd like the text repeated. Specifying '0'
+ * will cause the the <Say> verb to loop until the call is hung up.
+ *
+ * Supported Audio Formats
+ * audio/wav
+ * audio/wave
+ * audio/x-wav
+ */
 class Play extends Element
 {
     protected $nestables = array();
