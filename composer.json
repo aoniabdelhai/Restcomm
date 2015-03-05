@@ -1,7 +1,7 @@
 {
     "name": "restcomm/restcomm",
-    "description": "TelScale RestComm is a next generation Cloud Communications Platform. It allows web developers to rapidly build voice, video, WebRTC, USSD, SMS, fax and rich messaging applications. Restcomm opens new revenue streams for service providers by exposing existing SS7 and IMS core network assets to application developers",
-    "keywords": ["api", "RCML", "telephony", "Restcomm"],
+    "description": "TelScale RestComm  PHP SDK, suitable to build voice application",
+    "keywords": ["call api","sms api", "RCML", "telephony", "Restcomm","voice application"],
     "homepage": "http://www,ombrite.com",
     "license": "MIT",
     "authors": [
