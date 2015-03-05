@@ -2,7 +2,7 @@
     "name": "restcomm/restcomm",
     "description": "TelScale RestComm  PHP SDK, suitable to build voice application",
     "keywords": ["call api","sms api", "RCML", "telephony", "Restcomm","voice application"],
-    "homepage": "http://www,ombrite.com",
+    "homepage": "http://www.ombrite.com",
     "license": "MIT",
     "authors": [
         {
