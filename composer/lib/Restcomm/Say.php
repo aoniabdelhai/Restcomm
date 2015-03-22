@@ -14,6 +14,8 @@
  * @loop The 'loop' attribute (loop >1 Default:1 ) specifies how many times you'd like the text repeated. Specifying '0'
  * will cause the the <Say> verb to loop until the call is hung up.
  *
+ * rss voice . akabila
+ *
  */
 class Say extends Element
 {

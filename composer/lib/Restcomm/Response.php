@@ -4,7 +4,7 @@ class Response extends Element
 {
     protected $nestables = array('Say', 'Play', 'Gather', 'Record',
         'Dial', 'Redirect', 'Pause', 'Hangup',
-        'Reject', 'Redirect', 'Sms', 'Fax');
+        'Reject', 'Redirect', 'Sms', 'Fax','Conference');
 
     function __construct()
     {
