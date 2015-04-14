@@ -33,13 +33,4 @@ class Record extends Element
 
     protected $valid_attributes = array('action','method','timeout','finishOnKey','maxLength','transcribe','transcribeCallback','transcribeCallback','playBeep');
 
-    function __construct($body, $attributes = array())
-    {
-        parent::__construct($body, $attributes);
-
-        if (!$body)
-        {
-            throw new RestcommException("No Play File set for " . $this->getName());
-        }
-    }
 }

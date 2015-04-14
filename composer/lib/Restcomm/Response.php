@@ -6,14 +6,4 @@ class Response extends Element
         'Dial', 'Redirect', 'Pause', 'Hangup',
         'Reject', 'Redirect', 'Sms', 'Fax','Conference');
 
-    function __construct()
-    {
-        parent::__construct(NULL);
-    }
-
-    public function toXML($header = TRUE)
-    {
-        $xml = parent::toXML($header);
-        return $xml;
-    }
 }

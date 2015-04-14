@@ -6,10 +6,7 @@
  * Time: 14:55
  */
 require_once __DIR__ . '/../lib/autoloader.php';
-;
-$response = new Restcomm\Response();
-$response->Say('hi how are you');
+$r = new Restcomm\Response();
+$r->Record('',array('method'=>'GET','timeouts'=>10));
 
-header("Content-Type: text/xml");
-echo($response
-);
+echo $r;

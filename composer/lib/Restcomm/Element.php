@@ -1,131 +1,114 @@
 <?php
 namespace Restcomm;
-use \SimpleXMLElement;
+
+use SimpleXMLElement;
 
 class Element
 {
+    protected $element;
     protected $nestables = array();
-
     protected $valid_attributes = array();
 
-    protected $attributes = array();
-
-    protected $name;
-
-    protected $body = NULL;
-
-    protected $childs = array();
-
-    function __construct($body = '', $attributes = array())
-    {
-        $this->attributes = $attributes;
-        if ((!$attributes) || ($attributes === null))
-        {
-            $this->attributes = array();
-        }
-        $this->name = get_class($this);
-        $this->body = $body;
-
-        foreach ($this->attributes as $key => $value)
-        {
-            if (!in_array($key, $this->valid_attributes)) {
-                throw new RestcommException("invalid attribute " . $key . " for " . $this->name);
-            }
-
-            if(is_bool($value))
-                $value = ($value === true) ? 'true' : 'false';
-
-            $this->attributes[$key] =($value === null) ? 'null' : $value;
-        }
-    }
-
-    function __call($verb,array $arguments)
+    /**
+     * Constructs a Fone.do response.
+     *
+     * :param SimpleXmlElement|array $arg: Can be any of
+     *
+     *   - the element to wrap
+     *   - attributes to add to the element
+     *   - if null, initialize an empty element named 'Response'
+     */
+    public function __construct($arg = null)
     {
 
-        list($body, $attributes) = $arguments + array('', array());
 
-        $verb=__NAMESPACE__.'\\'.ucfirst($verb);
-
-        if(!class_exists($verb))
-            throw new RestcommException("Invalid RCML Verb " . $verb);
-
-        return $this->add(new $verb($body, $attributes));
-    }
-
-
-    protected function add($element)
-    {
-
-        if (!in_array($element->getName(), $this->nestables)) {
-            throw new \Restcomm\RestcommException($element->getName() . " not nestable in " . $this->getName());
-        }
-        $this->childs[] = $element;
-        return $element;
-    }
-
-    public function getName()
-    {
-
-        list($namespace,$name)=explode('\\',$this->name);
-        return $name;
-    }
-
-
-
-    public function asChild($xml)
-    {
-        if ($this->body)
-        {
-            $decoded = html_entity_decode($this->body, ENT_COMPAT, 'UTF-8');
-            $normalized = htmlspecialchars($decoded, ENT_COMPAT, 'UTF-8', false);
-            $child_xml = $xml->addChild(ucfirst($this->getName()),$normalized);
-        } else
-        {
-            $child_xml = $xml->addChild(ucfirst($this->getName()));
-        }
-        $this->setAttributes($child_xml);
-        foreach ($this->childs as $child)
-        {
-            $child->asChild($child_xml);
+        switch (true) {
+            case $arg instanceof SimpleXmlElement:
+                $this->element = $arg;
+                break;
+            case $arg === null:
+                $this->element = new SimpleXmlElement('<Response/>');
+                break;
+            case is_array($arg):
+                $this->element = new SimpleXmlElement('<Response/>');
+                foreach ($arg as $name => $value) {
+                    $this->element->addAttribute($name, $value);
+                }
+                break;
+            default:
+                throw new Exception('Invalid argument');
         }
     }
 
-    public function setAttributes($xml)
+    public function __call($verb, array $args)
     {
-        foreach ($this->attributes as $name => $value) {
-            if (is_bool($value))
-            {
+        $verb_class =ucfirst($verb);
+
+
+        list($noun, $attrs) = $args + array('', array());
+
+
+
+        if (is_array($noun))
+        {
+            list($attrs, $noun) = array($noun, '');
+        }
+        /* addChild does not escape XML, while addAttribute does. This means if
+         * you pass unescaped ampersands ("&") to addChild, you will generate
+         * an error.
+         *
+         * Some inexperienced developers will pass in unescaped ampersands, and
+         * we want to make their code work, by escaping the ampersands for them
+         * before passing the string to addChild. (with htmlentities)
+         *
+         * However other people will know what to do, and their code
+         * already escapes ampersands before passing them to addChild. We don't
+         * want to break their existing code by turning their &amp;'s into
+         * &amp;amp;
+         *
+         * We also want to use numeric entities, not named entities so that we
+         * are fully compatible with XML
+         *
+         * The following lines accomplish the desired behavior.
+         */
+        $decoded = html_entity_decode($noun, ENT_COMPAT, 'UTF-8');
+        $normalized = htmlspecialchars($decoded, ENT_COMPAT, 'UTF-8', false);
+
+        //$e=new $verb_class();
+
+        $child = empty($noun)
+            ? $this->element->addChild(ucfirst($verb))
+            : $this->element->addChild(ucfirst($verb), $normalized);
+
+        foreach ($attrs as $name => $value) {
+            /* Note that addAttribute escapes raw ampersands by default, so we
+             * haven't touched its implementation. So this is the matrix for
+             * addAttribute:
+             *
+             * & turns into &amp;
+             * &amp; turns into &amp;amp;
+             */
+            if (is_bool($value)) {
                 $value = ($value === true) ? 'true' : 'false';
             }
-            $xml->addAttribute($name, $value);
+            $child->addAttribute($name, $value);
         }
+        return new static($child);
     }
 
+    /**
+     * Returns the object as XML.
+     *
+     * :return: The response as an XML string
+     * :rtype: string
+     */
     public function __toString()
     {
-        return $this->toXML();
+        $xml = $this->element->asXml();
+        return str_replace(
+            '<?xml version="1.0"?>',
+            '<?xml version="1.0" encoding="UTF-8"?>', $xml);
     }
 
-    public function toXML($header = FALSE)
-    {
-        if (!(isset($xmlstr))) {
-            $xmlstr = '';
-        }
-
-        if ($this->body) {
-            $xmlstr .= "<" . $this->getName() . ">" . htmlspecialchars($this->body) . "</" . $this->getName() . ">";
-        } else {
-            $xmlstr .= "<" . $this->getName() . "/>";
-        }
-        if ($header === TRUE) {
-            $xmlstr = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" . $xmlstr;
-        }
-        $xml = new SimpleXMLElement($xmlstr);
-        $this->setAttributes($xml);
-        foreach ($this->childs as $child) {
-            $child->asChild($xml);
-        }
-        return $xml->asXML();
-    }
 
 }
